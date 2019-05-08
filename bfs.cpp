@@ -32,13 +32,15 @@ public:
   }
 
   void bottomUp(std::set<int> frontier, std::set<int>& next, std::vector<int>& parents) {
-    for (auto const& v : frontier) {
+    for (auto v=0; v<V; v++) {
       std::cout << "bottom " << v <<" "<< parents[v] <<'\n';
       if (parents[v] == -1) {
         for (auto const& n: adj[v]) {
-          parents[n] = v;
-          next.insert(n);
-          break;
+          if (frontier.contains(n)) {
+            parents[v] = n;
+            next.insert(v);
+            break;
+          }
         }
       }
     }
@@ -52,7 +54,8 @@ public:
     std::vector<int> parents(V,-1);
 
     while (frontier.size() > 0) {
-      if (frontier.size() > V/2) {
+      std::cout << "frontier " << frontier.size() << " " << V/2 << '\n';
+      if (frontier.size() >= V/2) {
         bottomUp(frontier, next, parents);
       } else {
         topDown(frontier, next, parents);
